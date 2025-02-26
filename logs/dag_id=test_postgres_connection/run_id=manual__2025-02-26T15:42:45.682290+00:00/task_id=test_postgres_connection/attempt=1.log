@@ -1,0 +1,44 @@
+[2025-02-26T15:42:49.563+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-02-26T15:42:49.572+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: test_postgres_connection.test_postgres_connection manual__2025-02-26T15:42:45.682290+00:00 [queued]>
+[2025-02-26T15:42:49.580+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: test_postgres_connection.test_postgres_connection manual__2025-02-26T15:42:45.682290+00:00 [queued]>
+[2025-02-26T15:42:49.581+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 2
+[2025-02-26T15:42:49.711+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): test_postgres_connection> on 2025-02-26 15:42:45.682290+00:00
+[2025-02-26T15:42:49.716+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=97) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-02-26T15:42:49.717+0000] {standard_task_runner.py:72} INFO - Started process 98 to run task
+[2025-02-26T15:42:49.718+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'test_postgres_connection', 'test_postgres_connection', 'manual__2025-02-26T15:42:45.682290+00:00', '--job-id', '41', '--raw', '--subdir', 'DAGS_FOLDER/test_connection.py', '--cfg-path', '/tmp/tmppp0u46c7']
+[2025-02-26T15:42:49.719+0000] {standard_task_runner.py:105} INFO - Job 41: Subtask test_postgres_connection
+[2025-02-26T15:42:49.748+0000] {task_command.py:467} INFO - Running <TaskInstance: test_postgres_connection.test_postgres_connection manual__2025-02-26T15:42:45.682290+00:00 [running]> on host b93a72659cb5
+[2025-02-26T15:42:49.808+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='test_postgres_connection' AIRFLOW_CTX_TASK_ID='test_postgres_connection' AIRFLOW_CTX_EXECUTION_DATE='2025-02-26T15:42:45.682290+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-02-26T15:42:45.682290+00:00'
+[2025-02-26T15:42:49.810+0000] {logging_mixin.py:190} INFO - Task instance is in running state
+[2025-02-26T15:42:49.811+0000] {logging_mixin.py:190} INFO -  Previous state of the Task instance: queued
+[2025-02-26T15:42:49.811+0000] {logging_mixin.py:190} INFO - Current task name:test_postgres_connection state:running start_date:2025-02-26 15:42:49.573051+00:00
+[2025-02-26T15:42:49.812+0000] {logging_mixin.py:190} INFO - Dag name:test_postgres_connection and current dag run status:running
+[2025-02-26T15:42:49.812+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-02-26T15:42:49.813+0000] {test_connection.py:51} INFO - Testing PostgreSQL connection
+[2025-02-26T15:42:49.814+0000] {test_connection.py:62} INFO - Connecting to PostgreSQL at data-postgres:5432/datawarehouse
+[2025-02-26T15:42:49.820+0000] {test_connection.py:72} INFO - Connection established successfully
+[2025-02-26T15:42:49.826+0000] {warnings.py:112} WARNING - /opt/***/dags/test_connection.py:76: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn)
+
+[2025-02-26T15:42:49.830+0000] {test_connection.py:79} INFO - Query executed successfully. Retrieved 5 rows.
+[2025-02-26T15:42:49.831+0000] {logging_mixin.py:190} INFO - 
+Sample data from ecommerce_orders:
+[2025-02-26T15:42:49.838+0000] {logging_mixin.py:190} INFO -    order_id customer        order_date
+0      1001    alice        2021/01/15
+1      1002     Bob         15-01-2021
+2      1003  charlie  January 15, 2021
+3      1002      Bob        15/01/2021
+4      1004    David        2021.01.16
+[2025-02-26T15:42:49.839+0000] {test_connection.py:85} INFO - Connection closed
+[2025-02-26T15:42:49.839+0000] {python.py:240} INFO - Done. Returned value was: True
+[2025-02-26T15:42:49.855+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-02-26T15:42:49.855+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=test_postgres_connection, task_id=test_postgres_connection, run_id=manual__2025-02-26T15:42:45.682290+00:00, execution_date=20250226T154245, start_date=20250226T154249, end_date=20250226T154249
+[2025-02-26T15:42:49.872+0000] {logging_mixin.py:190} INFO - Task instance in success state
+[2025-02-26T15:42:49.872+0000] {logging_mixin.py:190} INFO -  Previous state of the Task instance: running
+[2025-02-26T15:42:49.872+0000] {logging_mixin.py:190} INFO - Dag name:test_postgres_connection queued_at:2025-02-26 15:42:45.702344+00:00
+[2025-02-26T15:42:49.872+0000] {logging_mixin.py:190} INFO - Task hostname:b93a72659cb5 operator:PythonOperator
+[2025-02-26T15:42:49.901+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-02-26T15:42:49.916+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-02-26T15:42:49.917+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

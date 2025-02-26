@@ -1,0 +1,121 @@
+[2025-02-26T17:10:56.361+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-02-26T17:10:56.368+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T17:10:54.590217+00:00 [queued]>
+[2025-02-26T17:10:56.371+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T17:10:54.590217+00:00 [queued]>
+[2025-02-26T17:10:56.371+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 1
+[2025-02-26T17:10:56.458+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): clean_data_task> on 2025-02-26 17:10:54.590217+00:00
+[2025-02-26T17:10:56.463+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=122) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-02-26T17:10:56.464+0000] {standard_task_runner.py:72} INFO - Started process 123 to run task
+[2025-02-26T17:10:56.464+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'data_cleaning_ecommerce_postgres', 'clean_data_task', 'manual__2025-02-26T17:10:54.590217+00:00', '--job-id', '60', '--raw', '--subdir', 'DAGS_FOLDER/data_cleaning_ecommerce_postgres.py', '--cfg-path', '/tmp/tmp73drxlv_']
+[2025-02-26T17:10:56.465+0000] {standard_task_runner.py:105} INFO - Job 60: Subtask clean_data_task
+[2025-02-26T17:10:56.490+0000] {task_command.py:467} INFO - Running <TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T17:10:54.590217+00:00 [running]> on host 37aea781b896
+[2025-02-26T17:10:56.537+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='data_cleaning_ecommerce_postgres' AIRFLOW_CTX_TASK_ID='clean_data_task' AIRFLOW_CTX_EXECUTION_DATE='2025-02-26T17:10:54.590217+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-02-26T17:10:54.590217+00:00'
+[2025-02-26T17:10:56.541+0000] {logging_mixin.py:190} INFO - Task instance is in running state
+[2025-02-26T17:10:56.541+0000] {logging_mixin.py:190} INFO -  Previous state of the Task instance: queued
+[2025-02-26T17:10:56.541+0000] {logging_mixin.py:190} INFO - Current task name:clean_data_task state:running start_date:2025-02-26 17:10:56.368800+00:00
+[2025-02-26T17:10:56.541+0000] {logging_mixin.py:190} INFO - Dag name:data_cleaning_ecommerce_postgres and current dag run status:running
+[2025-02-26T17:10:56.542+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-02-26T17:10:56.542+0000] {data_cleaning_ecommerce_postgres.py:327} INFO - Starting e-commerce data cleaning process
+[2025-02-26T17:10:56.542+0000] {data_cleaning_ecommerce_postgres.py:60} INFO - Establishing database connection
+[2025-02-26T17:10:56.543+0000] {data_cleaning_ecommerce_postgres.py:69} INFO - Connecting to PostgreSQL at data-postgres:5432/datawarehouse
+[2025-02-26T17:10:56.543+0000] {data_cleaning_ecommerce_postgres.py:70} INFO - User: datauser
+[2025-02-26T17:10:56.543+0000] {data_cleaning_ecommerce_postgres.py:71} INFO - Password: datapass
+[2025-02-26T17:10:56.546+0000] {data_cleaning_ecommerce_postgres.py:79} INFO - Database connection established successfully
+[2025-02-26T17:10:56.546+0000] {data_cleaning_ecommerce_postgres.py:96} INFO - Extracting data from ecommerce_orders table
+[2025-02-26T17:10:56.552+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:99: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn)
+
+[2025-02-26T17:10:56.556+0000] {data_cleaning_ecommerce_postgres.py:100} INFO - Successfully extracted 103 records
+[2025-02-26T17:10:56.557+0000] {logging_mixin.py:190} INFO - Original DataFrame:
+[2025-02-26T17:10:56.569+0000] {logging_mixin.py:190} INFO -    order_id customer        order_date     product  quantity   price
+0      1001    alice        2021/01/15      Laptop       1.0  1200.0
+1      1002     Bob         15-01-2021  smartphone       2.0   800.0
+2      1003  charlie  January 15, 2021      Tablet       NaN   400.0
+3      1002      Bob        15/01/2021  Smartphone       2.0   800.0
+4      1004    David        2021.01.16     laptop        1.0  1200.0
+[2025-02-26T17:10:56.569+0000] {data_cleaning_ecommerce_postgres.py:336} INFO - Starting data transformation pipeline
+[2025-02-26T17:10:56.569+0000] {data_cleaning_ecommerce_postgres.py:121} INFO - Handling missing values
+[2025-02-26T17:10:56.570+0000] {data_cleaning_ecommerce_postgres.py:124} INFO - Found 20 missing quantity values and 14 missing price values
+[2025-02-26T17:10:56.571+0000] {data_cleaning_ecommerce_postgres.py:129} INFO - Missing values handled successfully
+[2025-02-26T17:10:56.571+0000] {data_cleaning_ecommerce_postgres.py:143} INFO - Removing duplicate records
+[2025-02-26T17:10:56.572+0000] {data_cleaning_ecommerce_postgres.py:147} INFO - Removed 2 duplicate records
+[2025-02-26T17:10:56.572+0000] {data_cleaning_ecommerce_postgres.py:161} INFO - Standardizing data formats
+[2025-02-26T17:10:56.578+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:173: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['order_date'] = pd.to_datetime(df['order_date'],
+
+[2025-02-26T17:10:56.579+0000] {logging_mixin.py:190} INFO - Standardized date formats
+[2025-02-26T17:10:56.579+0000] {logging_mixin.py:190} INFO - 0   2021-01-15
+1   2021-01-15
+2   2021-01-15
+4   2021-01-16
+5   2021-01-16
+Name: order_date, dtype: datetime64[ns]
+[2025-02-26T17:10:56.580+0000] {data_cleaning_ecommerce_postgres.py:181} INFO - Date standardization: 0 new invalid dates detected
+[2025-02-26T17:10:56.580+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:183: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['customer'] = df['customer'].str.strip().str.title()
+
+[2025-02-26T17:10:56.581+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:184: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['product'] = df['product'].str.strip().str.lower().str.title()
+
+[2025-02-26T17:10:56.581+0000] {data_cleaning_ecommerce_postgres.py:186} INFO - Data formats standardized successfully
+[2025-02-26T17:10:56.581+0000] {data_cleaning_ecommerce_postgres.py:200} INFO - Adding computed columns
+[2025-02-26T17:10:56.582+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:201: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['total_cost'] = df['quantity'] * df['price']
+
+[2025-02-26T17:10:56.582+0000] {data_cleaning_ecommerce_postgres.py:202} INFO - Added 'total_cost' column
+[2025-02-26T17:10:56.582+0000] {data_cleaning_ecommerce_postgres.py:342} INFO - Data transformation completed
+[2025-02-26T17:10:56.582+0000] {logging_mixin.py:190} INFO - 
+Cleaned DataFrame:
+[2025-02-26T17:10:56.587+0000] {logging_mixin.py:190} INFO -    order_id customer order_date     product  quantity   price  total_cost
+0      1001    Alice 2021-01-15      Laptop       1.0  1200.0      1200.0
+1      1002      Bob 2021-01-15  Smartphone       2.0   800.0      1600.0
+2      1003  Charlie 2021-01-15      Tablet       3.0   400.0      1200.0
+4      1004    David 2021-01-16      Laptop       1.0  1200.0      1200.0
+5      1005      Eve 2021-01-16      Tablet       3.0   400.0      1200.0
+[2025-02-26T17:10:56.587+0000] {data_cleaning_ecommerce_postgres.py:216} INFO - Running data quality checks
+[2025-02-26T17:10:56.587+0000] {data_cleaning_ecommerce_postgres.py:220} INFO - Quality check for 'quantity' not null: PASSED
+[2025-02-26T17:10:56.588+0000] {data_cleaning_ecommerce_postgres.py:224} INFO - Quality check for 'order_date' not null: PASSED
+[2025-02-26T17:10:56.588+0000] {data_cleaning_ecommerce_postgres.py:228} INFO - Quality check for 'order_date' type: PASSED
+[2025-02-26T17:10:56.589+0000] {data_cleaning_ecommerce_postgres.py:231} INFO - Quality check for 'quantity' range: PASSED
+[2025-02-26T17:10:56.589+0000] {data_cleaning_ecommerce_postgres.py:234} INFO - Quality check for 'price' range: PASSED
+[2025-02-26T17:10:56.589+0000] {data_cleaning_ecommerce_postgres.py:237} INFO - Quality check for 'total_cost' not null: PASSED
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - 
+Data Quality Check Results:
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Quantity not null: True
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Order date not null: True
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Order date is datetime type: True
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Quantity between 1 and 1000: True
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Price between 0 and 10000: True
+[2025-02-26T17:10:56.590+0000] {logging_mixin.py:190} INFO - Total cost not null: True
+[2025-02-26T17:10:56.590+0000] {data_cleaning_ecommerce_postgres.py:262} INFO - Saving cleaned data to ecommerce_orders_cleaned table
+[2025-02-26T17:10:56.611+0000] {data_cleaning_ecommerce_postgres.py:306} INFO - Successfully saved 101 records to ecommerce_orders_cleaned
+[2025-02-26T17:10:56.611+0000] {logging_mixin.py:190} INFO - Cleaned data written to PostgreSQL table: ecommerce_orders_cleaned
+[2025-02-26T17:10:56.612+0000] {data_cleaning_ecommerce_postgres.py:354} INFO - Database connection closed
+[2025-02-26T17:10:56.612+0000] {data_cleaning_ecommerce_postgres.py:356} INFO - Data cleaning process completed. Quality check: PASSED
+[2025-02-26T17:10:56.612+0000] {python.py:240} INFO - Done. Returned value was: True
+[2025-02-26T17:10:56.625+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-02-26T17:10:56.625+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=data_cleaning_ecommerce_postgres, task_id=clean_data_task, run_id=manual__2025-02-26T17:10:54.590217+00:00, execution_date=20250226T171054, start_date=20250226T171056, end_date=20250226T171056
+[2025-02-26T17:10:56.637+0000] {logging_mixin.py:190} INFO - Task instance in success state
+[2025-02-26T17:10:56.637+0000] {logging_mixin.py:190} INFO -  Previous state of the Task instance: running
+[2025-02-26T17:10:56.638+0000] {logging_mixin.py:190} INFO - Dag name:data_cleaning_ecommerce_postgres queued_at:2025-02-26 17:10:54.612734+00:00
+[2025-02-26T17:10:56.638+0000] {logging_mixin.py:190} INFO - Task hostname:37aea781b896 operator:PythonOperator
+[2025-02-26T17:10:56.646+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-02-26T17:10:56.655+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-02-26T17:10:56.656+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

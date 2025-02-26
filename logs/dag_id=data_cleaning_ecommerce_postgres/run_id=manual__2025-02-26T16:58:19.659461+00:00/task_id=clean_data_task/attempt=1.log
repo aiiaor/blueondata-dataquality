@@ -1,0 +1,219 @@
+[2025-02-26T16:58:20.834+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-02-26T16:58:20.841+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T16:58:19.659461+00:00 [queued]>
+[2025-02-26T16:58:20.844+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T16:58:19.659461+00:00 [queued]>
+[2025-02-26T16:58:20.844+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 1
+[2025-02-26T16:58:20.926+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): clean_data_task> on 2025-02-26 16:58:19.659461+00:00
+[2025-02-26T16:58:20.930+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=441) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-02-26T16:58:20.931+0000] {standard_task_runner.py:72} INFO - Started process 442 to run task
+[2025-02-26T16:58:20.931+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'data_cleaning_ecommerce_postgres', 'clean_data_task', 'manual__2025-02-26T16:58:19.659461+00:00', '--job-id', '48', '--raw', '--subdir', 'DAGS_FOLDER/data_cleaning_ecommerce_postgres.py', '--cfg-path', '/tmp/tmps4lo_d0p']
+[2025-02-26T16:58:20.932+0000] {standard_task_runner.py:105} INFO - Job 48: Subtask clean_data_task
+[2025-02-26T16:58:20.956+0000] {task_command.py:467} INFO - Running <TaskInstance: data_cleaning_ecommerce_postgres.clean_data_task manual__2025-02-26T16:58:19.659461+00:00 [running]> on host 20ee469f3941
+[2025-02-26T16:58:20.989+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='data_cleaning_ecommerce_postgres' AIRFLOW_CTX_TASK_ID='clean_data_task' AIRFLOW_CTX_EXECUTION_DATE='2025-02-26T16:58:19.659461+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-02-26T16:58:19.659461+00:00'
+[2025-02-26T16:58:20.989+0000] {logging_mixin.py:190} INFO - Task instance is in running state
+[2025-02-26T16:58:20.989+0000] {logging_mixin.py:190} INFO -  Previous state of the Task instance: queued
+[2025-02-26T16:58:20.990+0000] {logging_mixin.py:190} INFO - Current task name:clean_data_task state:running start_date:2025-02-26 16:58:20.841815+00:00
+[2025-02-26T16:58:20.990+0000] {logging_mixin.py:190} INFO - Dag name:data_cleaning_ecommerce_postgres and current dag run status:running
+[2025-02-26T16:58:20.990+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-02-26T16:58:20.990+0000] {data_cleaning_ecommerce_postgres.py:326} INFO - Starting e-commerce data cleaning process
+[2025-02-26T16:58:20.990+0000] {data_cleaning_ecommerce_postgres.py:60} INFO - Establishing database connection
+[2025-02-26T16:58:20.990+0000] {data_cleaning_ecommerce_postgres.py:69} INFO - Connecting to PostgreSQL at data-postgres:5432/datawarehouse
+[2025-02-26T16:58:20.990+0000] {data_cleaning_ecommerce_postgres.py:70} INFO - User: datauser
+[2025-02-26T16:58:20.991+0000] {data_cleaning_ecommerce_postgres.py:71} INFO - Password: datapass
+[2025-02-26T16:58:20.992+0000] {data_cleaning_ecommerce_postgres.py:79} INFO - Database connection established successfully
+[2025-02-26T16:58:20.992+0000] {data_cleaning_ecommerce_postgres.py:96} INFO - Extracting data from ecommerce_orders table
+[2025-02-26T16:58:20.999+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:99: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn)
+
+[2025-02-26T16:58:21.005+0000] {data_cleaning_ecommerce_postgres.py:100} INFO - Successfully extracted 103 records
+[2025-02-26T16:58:21.006+0000] {logging_mixin.py:190} INFO - Original DataFrame:
+[2025-02-26T16:58:21.012+0000] {logging_mixin.py:190} INFO -    order_id customer        order_date     product  quantity   price
+0      1001    alice        2021/01/15      Laptop       1.0  1200.0
+1      1002     Bob         15-01-2021  smartphone       2.0   800.0
+2      1003  charlie  January 15, 2021      Tablet       NaN   400.0
+3      1002      Bob        15/01/2021  Smartphone       2.0   800.0
+4      1004    David        2021.01.16     laptop        1.0  1200.0
+[2025-02-26T16:58:21.012+0000] {data_cleaning_ecommerce_postgres.py:335} INFO - Starting data transformation pipeline
+[2025-02-26T16:58:21.012+0000] {data_cleaning_ecommerce_postgres.py:121} INFO - Handling missing values
+[2025-02-26T16:58:21.012+0000] {data_cleaning_ecommerce_postgres.py:124} INFO - Found 20 missing quantity values and 14 missing price values
+[2025-02-26T16:58:21.013+0000] {data_cleaning_ecommerce_postgres.py:129} INFO - Missing values handled successfully
+[2025-02-26T16:58:21.013+0000] {data_cleaning_ecommerce_postgres.py:143} INFO - Removing duplicate records
+[2025-02-26T16:58:21.014+0000] {data_cleaning_ecommerce_postgres.py:147} INFO - Removed 2 duplicate records
+[2025-02-26T16:58:21.014+0000] {data_cleaning_ecommerce_postgres.py:161} INFO - Standardizing data formats
+[2025-02-26T16:58:21.017+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:173: UserWarning: Parsing dates in %Y/%m/%d format when dayfirst=True was specified. Pass `dayfirst=False` or specify a format to silence this warning.
+  df['order_date'] = pd.to_datetime(df['order_date'],
+
+[2025-02-26T16:58:21.018+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:173: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['order_date'] = pd.to_datetime(df['order_date'],
+
+[2025-02-26T16:58:21.018+0000] {data_cleaning_ecommerce_postgres.py:180} INFO - Date standardization: 72 new invalid dates detected
+[2025-02-26T16:58:21.018+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:182: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['customer'] = df['customer'].str.strip().str.title()
+
+[2025-02-26T16:58:21.019+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:183: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['product'] = df['product'].str.strip().str.lower().str.title()
+
+[2025-02-26T16:58:21.019+0000] {data_cleaning_ecommerce_postgres.py:185} INFO - Data formats standardized successfully
+[2025-02-26T16:58:21.019+0000] {data_cleaning_ecommerce_postgres.py:199} INFO - Adding computed columns
+[2025-02-26T16:58:21.019+0000] {warnings.py:112} WARNING - /opt/***/dags/data_cleaning_ecommerce_postgres.py:200: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df['total_cost'] = df['quantity'] * df['price']
+
+[2025-02-26T16:58:21.019+0000] {data_cleaning_ecommerce_postgres.py:201} INFO - Added 'total_cost' column
+[2025-02-26T16:58:21.019+0000] {data_cleaning_ecommerce_postgres.py:341} INFO - Data transformation completed
+[2025-02-26T16:58:21.020+0000] {logging_mixin.py:190} INFO - 
+Cleaned DataFrame:
+[2025-02-26T16:58:21.024+0000] {logging_mixin.py:190} INFO -    order_id customer order_date     product  quantity   price  total_cost
+0      1001    Alice 2021-01-15      Laptop       1.0  1200.0      1200.0
+1      1002      Bob        NaT  Smartphone       2.0   800.0      1600.0
+2      1003  Charlie        NaT      Tablet       3.0   400.0      1200.0
+4      1004    David        NaT      Laptop       1.0  1200.0      1200.0
+5      1005      Eve        NaT      Tablet       3.0   400.0      1200.0
+[2025-02-26T16:58:21.024+0000] {data_cleaning_ecommerce_postgres.py:215} INFO - Running data quality checks
+[2025-02-26T16:58:21.025+0000] {data_cleaning_ecommerce_postgres.py:219} INFO - Quality check for 'quantity' not null: PASSED
+[2025-02-26T16:58:21.025+0000] {data_cleaning_ecommerce_postgres.py:223} INFO - Quality check for 'order_date' not null: FAILED
+[2025-02-26T16:58:21.025+0000] {data_cleaning_ecommerce_postgres.py:227} INFO - Quality check for 'order_date' type: PASSED
+[2025-02-26T16:58:21.025+0000] {data_cleaning_ecommerce_postgres.py:230} INFO - Quality check for 'quantity' range: PASSED
+[2025-02-26T16:58:21.025+0000] {data_cleaning_ecommerce_postgres.py:233} INFO - Quality check for 'price' range: PASSED
+[2025-02-26T16:58:21.026+0000] {data_cleaning_ecommerce_postgres.py:236} INFO - Quality check for 'total_cost' not null: PASSED
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - 
+Data Quality Check Results:
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Quantity not null: True
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Order date not null: False
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Order date is datetime type: True
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Quantity between 1 and 1000: True
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Price between 0 and 10000: True
+[2025-02-26T16:58:21.026+0000] {logging_mixin.py:190} INFO - Total cost not null: True
+[2025-02-26T16:58:21.026+0000] {data_cleaning_ecommerce_postgres.py:261} INFO - Saving cleaned data to ecommerce_orders_cleaned table
+[2025-02-26T16:58:21.033+0000] {data_cleaning_ecommerce_postgres.py:308} ERROR - Failed to save cleaned data: invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+
+[2025-02-26T16:58:21.033+0000] {data_cleaning_ecommerce_postgres.py:358} ERROR - Data cleaning process failed: invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+
+[2025-02-26T16:58:21.033+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/data_cleaning_ecommerce_postgres.py", line 349, in load_and_clean_data
+    save_cleaned_data(df_clean, conn)
+  File "/opt/airflow/dags/data_cleaning_ecommerce_postgres.py", line 289, in save_cleaned_data
+    cursor.execute(insert_query, (
+psycopg2.errors.InvalidDatetimeFormat: invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+
+[2025-02-26T16:58:21.040+0000] {logging_mixin.py:190} INFO - Task instance in failure state
+[2025-02-26T16:58:21.040+0000] {logging_mixin.py:190} INFO - Task start:2025-02-26 16:58:20.841815+00:00 end:2025-02-26 16:58:21.039905+00:00 duration:0.19809
+[2025-02-26T16:58:21.040+0000] {logging_mixin.py:190} INFO - Task:<Task(PythonOperator): clean_data_task> dag:<DAG: data_cleaning_ecommerce_postgres> dagrun:<DagRun data_cleaning_ecommerce_postgres @ 2025-02-26 16:58:19.659461+00:00: manual__2025-02-26T16:58:19.659461+00:00, state:running, queued_at: 2025-02-26 16:58:19.683336+00:00. externally triggered: True>
+[2025-02-26T16:58:21.040+0000] {logging_mixin.py:190} INFO - Failure caused by invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+[2025-02-26T16:58:21.040+0000] {taskinstance.py:1226} INFO - Marking task as FAILED. dag_id=data_cleaning_ecommerce_postgres, task_id=clean_data_task, run_id=manual__2025-02-26T16:58:19.659461+00:00, execution_date=20250226T165819, start_date=20250226T165820, end_date=20250226T165821
+[2025-02-26T16:58:21.052+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-02-26T16:58:21.052+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 48 for task clean_data_task (invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+; 442)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/data_cleaning_ecommerce_postgres.py", line 349, in load_and_clean_data
+    save_cleaned_data(df_clean, conn)
+  File "/opt/airflow/dags/data_cleaning_ecommerce_postgres.py", line 289, in save_cleaned_data
+    cursor.execute(insert_query, (
+psycopg2.errors.InvalidDatetimeFormat: invalid input syntax for type timestamp: "NaT"
+LINE 3:             VALUES (1002, 'Bob', 'NaT'::timestamp, 'Smartpho...
+                                         ^
+
+[2025-02-26T16:58:21.071+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-02-26T16:58:21.081+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-02-26T16:58:21.081+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
