@@ -19,6 +19,7 @@ import pandas as pd
 import os
 import psycopg2
 import logging
+from typing import Dict, Any
 
 
 # Configure logging
@@ -308,61 +309,100 @@ def save_cleaned_data(df, conn):
         raise
 
 
-def load_and_clean_data():
-    """
-    Main function to load and clean e-commerce data.
-
-    This function orchestrates the entire ETL process:
-    1. Connects to the database
-    2. Extracts the raw data
-    3. Applies transformation and cleaning operations
-    4. Validates the cleaned data
-    5. Loads the cleaned data back to the database
-
-    Returns:
-        bool: True if data quality checks pass, False otherwise.
-    """
-    logger.info("Starting e-commerce data cleaning process")
-    try:
-        # Connect to database
-        conn = get_database_connection()
-        
-        # Extract data
-        df = extract_data(conn)
-        
-        # Transform data
-        logger.info("Starting data transformation pipeline")
-        df = handle_missing_values(df)
-        df_clean = remove_duplicates(df)
-        df_clean = standardize_formats(df_clean)
-        df_clean = add_computed_columns(df_clean)
-        
-        logger.info("Data transformation completed")
-        print("\nCleaned DataFrame:")
-        print(df_clean.head())
-        
-        # Validate data
-        quality_check_passed = run_data_quality_checks(df_clean)
-        
-        # Load data
-        save_cleaned_data(df_clean, conn)
-        
-        # Close connection
-        conn.close()
-        logger.info("Database connection closed")
-        
-        logger.info(f"Data cleaning process completed. Quality check: {'PASSED' if quality_check_passed else 'FAILED'}")
-        return quality_check_passed
-    except Exception as e:
-        logger.error(f"Data cleaning process failed: {str(e)}")
-        raise
+def extract_raw_data(**context):
+    """Task to extract raw data from PostgreSQL."""
+    conn = get_database_connection()
+    df = extract_data(conn)
+    conn.close()
+    
+    df['order_date'] = df['order_date'].astype(str)
+    # Push the DataFrame to XCom
+    context['task_instance'].xcom_push(key='raw_data', value=df.to_dict())
+    return "Data extraction completed"
 
 
-# Define the PythonOperator task
-clean_data_task = PythonOperator(
-    task_id='clean_data_task',
-    python_callable=load_and_clean_data,
+def clean_and_transform_data(**context):
+    """Task to clean and transform the extracted data."""
+    # Get DataFrame from XCom
+    df = pd.DataFrame.from_dict(context['task_instance'].xcom_pull(task_ids='extract_raw_data', key='raw_data'))
+    
+    print("Debug: DataFrame after extraction")
+    print(df.head())
+    
+    # Apply transformations
+    df = handle_missing_values(df)
+    df = remove_duplicates(df)
+    df = standardize_formats(df)
+    df = add_computed_columns(df)
+    
+    # Convert to string for XCom
+    df['order_date'] = df['order_date'].astype(str)
+    
+    # Push cleaned data to XCom
+    context['task_instance'].xcom_push(key='cleaned_data', value=df.to_dict())
+    return "Data cleaning completed"
+
+
+def validate_data_quality(**context):
+    """Task to validate data quality."""
+    df = pd.DataFrame.from_dict(context['task_instance'].xcom_pull(task_ids='clean_and_transform_data', key='cleaned_data'))
+    
+    # Convert order_date to datetime safely
+    df['order_date'] = pd.to_datetime(df['order_date'], errors='coerce')
+    
+    quality_check_passed = run_data_quality_checks(df)
+    
+    if not quality_check_passed:
+        raise ValueError("Data quality checks failed")
+    
+    # Convert to string for XCom
+    df['order_date'] = df['order_date'].astype(str)
+    
+    context['task_instance'].xcom_push(key='validated_data', value=df.to_dict())
+    return "Data validation completed"
+
+
+def load_final_data(**context):
+    """Task to load the cleaned and validated data back to PostgreSQL."""
+    df = pd.DataFrame.from_dict(context['task_instance'].xcom_pull(task_ids='validate_data_quality', key='validated_data'))
+    
+    # Convert order_date to datetime safely
+    df['order_date'] = pd.to_datetime(df['order_date'], errors='coerce')
+    
+    conn = get_database_connection()
+    save_cleaned_data(df, conn)
+    conn.close()
+    return "Data loading completed"
+
+
+# Define tasks
+extract_task = PythonOperator(
+    task_id='extract_raw_data',
+    python_callable=extract_raw_data,
+    provide_context=True,
     dag=dag
 )
 
-clean_data_task
+clean_task = PythonOperator(
+    task_id='clean_and_transform_data',
+    python_callable=clean_and_transform_data,
+    provide_context=True,
+    dag=dag
+)
+
+validate_task = PythonOperator(
+    task_id='validate_data_quality',
+    python_callable=validate_data_quality,
+    provide_context=True,
+    dag=dag
+)
+
+load_task = PythonOperator(
+    task_id='load_final_data',
+    python_callable=load_final_data,
+    provide_context=True,
+    dag=dag
+)
+
+# Set task dependencies
+extract_task >> clean_task >> validate_task >> load_task
